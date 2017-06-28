@@ -1,0 +1,32 @@
+{
+    "name": "rxjs-dew",
+    "version": "0.1.0",
+    "description": "A redux like library built on typescript and rxjs",
+    "main": "js/index.js",
+    "typings": "js/index",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "build": "tsc"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/elhedran/rxjs-dew.git"
+    },
+    "keywords": [
+        "typescript",
+        "rxjs"
+    ],
+    "author": "elhedran@gmail.com",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/elhedran/rxjs-dew/issues"
+    },
+    "homepage": "https://github.com/elhedran/rxjs-dew#readme",
+    "devDependencies": {
+        "tslint": "^5.4.3",
+        "typescript": "2.3.4"
+    },
+    "dependencies": {
+        "rxjs": "^5.4.1"
+    }
+}
