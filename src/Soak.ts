@@ -1,28 +1,28 @@
-export type Soak<S, A> = <S, A>(state: S, action: A) => Pick<S, keyof S>;
-export type FullSoak<S, A> = <S, A>(state: S, action: A) => S;
+export type Soak<State, Action> = <State, Action>(state: State, action: Action) => Pick<State, keyof State>;
+export type FullSoak<State, Action> = <State, Action>(state: State, action: Action) => State;
 
-export const completeSoak = <S, A>(soak: Soak<S, A>): FullSoak<S, A> => {
-    return (s: S, a: A) => {
-        const partial = soak(s, a);
+export const completeSoak = <State, Action>(soak: Soak<State, Action>): FullSoak<State, Action> => {
+    return (state: State, action: Action) => {
+        const partial = soak(state, action);
         return (partial === undefined || partial === {})
-            ? s
-            : Object.assign({}, s, partial);
+            ? state
+            : Object.assign({}, state, partial);
     };
 };
 
-export const combineSoaks = <S, A>(...soaks: (Soak<S, A>)[]): Soak<S, A> => {
-    return (state: S, action: A) => {
+export const combineSoaks = <State, Action>(...soaks: (Soak<State, Action>)[]): Soak<State, Action> => {
+    return (state: State, action: Action) => {
         const partials = soaks
             .map(fn => fn(state, action))
-            .filter(p => p !== undefined && p !== {});
+            .filter(partial => partial !== undefined && partial !== {});
         return Object.assign({}, ...partials);
     };
 };
 
-export type SoakMapObject<S, A> = {
-    [key: string]: Soak<S, A>;
+export type SoakMapObject<State, Action> = {
+    [key: string]: Soak<State, Action>;
 };
 
-export type ParentState<R extends SoakMapObject<S, A>, S, A> = {
-    [P in keyof R]: S;
+export type ParentState<SoakMap extends SoakMapObject<State, Action>, State, Action> = {
+    [Param in keyof SoakMap]: State;
 };

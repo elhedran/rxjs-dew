@@ -1,9 +1,9 @@
 import { Observable } from 'rxjs';
 
-export type Flow<A> = <A>(in$: Observable<A>) => Observable<A>;
+export type Flow<Action> = <Action>(in$: Observable<Action>) => Observable<Action>;
 
-export const combineFlows = <A>(...flows: Flow<A>[]): Flow<A> => {
-    var result = (next: Observable<A>) => {
+export const combineFlows = <Action>(...flows: Flow<Action>[]): Flow<Action> => {
+    var result = (next: Observable<Action>) => {
         const share$ = next.share();
         return Observable.merge(
             ...flows.map(fn => fn(share$))
@@ -14,4 +14,4 @@ export const combineFlows = <A>(...flows: Flow<A>[]): Flow<A> => {
 };
 
 // tslint:disable-next-line:no-any
-export const flowThrough: Flow<any> = <A>(in$: Observable<A>) => in$;
+export const flowThrough: Flow<any> = <Action>(in$: Observable<Action>) => in$;

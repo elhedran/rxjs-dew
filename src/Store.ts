@@ -2,17 +2,21 @@ import { Flow } from './Flow';
 import { Soak, completeSoak } from './Soak';
 import { Observable, Subject } from 'rxjs';
 
-export type Store<S, A> = {
-    dispatch$: Subject<A>;
-    state$: Observable<S>;
+export type Store<State, Action> = {
+    dispatch$: Subject<Action>;
+    state$: Observable<State>;
 };
 
-export const createStore = <S, A>(flow: Flow<A>, soak: Soak<S, A>, initialState?: S): Store<S, A> => {
-    const subject$ = new Subject<A>();
-    const cr = completeSoak(soak);
+export const createStore = <State, Action>(
+    flow: Flow<Action>,
+    soak: Soak<State, Action>,
+    initialState?: State
+): Store<State, Action> => {
+    const subject$ = new Subject<Action>();
+    const fullSoak = completeSoak(soak);
     return {
         dispatch$: subject$,
-        state$: flow(subject$).scan<A, S>(cr, initialState).share()
+        state$: flow(subject$).scan<Action, State>(fullSoak, initialState).share()
     };
 };
 
