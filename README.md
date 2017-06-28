@@ -17,6 +17,11 @@ with some additional goals.
 
 ## Types
 
+### Action & State
+
+TODO explain the concepts of actions and states even though they are not
+part of the library directly.
+
 ### Flow
 
 ```
