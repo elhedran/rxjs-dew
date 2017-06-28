@@ -1,14 +1,11 @@
 {
     "compilerOptions": {
-        "outDir": "build/dist",
+        "outDir": "lib",
         "declaration": true,
         "module": "commonjs",
-        "target": "es5",
         "lib": ["es6", "dom"],
         "sourceMap": true,
         "allowJs": false,
-        "jsx": "react",
-        "moduleResolution": "node",
         "rootDir": "src",
         "forceConsistentCasingInFileNames": true,
         "noImplicitReturns": true,
@@ -20,12 +17,7 @@
     },
     "exclude": [
         "node_modules",
-        "build",
-        "scripts",
-        "acceptance-tests",
-        "webpack",
-        "jest",
-        "src/setupTests.ts"
+        "lib"
     ],
     "types": [
         "typePatches"
