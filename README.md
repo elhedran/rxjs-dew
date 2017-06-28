@@ -48,7 +48,13 @@ const combineFlows = <Action>(...flows: Flow<Action>[]): Flow<Action>
 ```
 
 Which is a convenience function for sharing the input stream over a set
-of flows and then merging the output of those flows to the output stream.
+of flows and then merging the output of those flows to the output stream. The
+earlier debounceSave is a blocking flow in that it doesn't allow any actions it
+doesn't filter for through, so its best to combine it with the flow through.
+
+```
+const flow = combineFlows(debounceSave, flowThrough);
+```
 
 ### Soak
 
