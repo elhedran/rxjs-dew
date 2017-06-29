@@ -1,3 +1,5 @@
+<img title="logo" src="logo/logo.svg" style="{width: 20em; height: 20em;}">
+
 # RxJs Dew
 
 This project is born out of an appreciation of redux, but a love of RxJS and
