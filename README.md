@@ -1,4 +1,4 @@
-<img title="logo" src="logo/logo.svg" style="{width: 20em; height: 20em;}">
+<img title="logo" src="logo/logo.png" style="{width: 20em; height: 20em;}">
 
 # RxJs Dew
 
