@@ -6,7 +6,11 @@ import { Observable, Subject } from 'rxjs';
  * The dispatch and state that comprises a dw Store.
  */
 export type Store<State, Action> = {
+    /** dispatch actions into the store */
     dispatch$: Subject<Action>;
+    /** observable of actions after flows applied */
+    flow$: Observable<Action>
+    /** observable of state after flows and soaks applied */
     state$: Observable<State>;
 };
 
@@ -24,12 +28,25 @@ export const createStore = <State, Action>(
     soak: Soak<State, Action>,
     initialState?: State
 ): Store<State, Action> => {
+    // insert
     const subject$ = new Subject<Action>();
+    // flow
+    const flow$ = flow(subject$).share();
+    // soak
     const fullSoak = completeSoak(soak);
-    return {
+    const scan$ = flow$.scan<Action, State>(fullSoak, initialState);
+    // state
+    const state$ = (initialState
+        ? Observable.concat(Observable.of(initialState), scan$)
+        : scan$).share();
+
+    const store = {
         dispatch$: subject$,
-        state$: flow(subject$).scan<Action, State>(fullSoak, initialState).share()
+        flow$: flow$,
+        state$: state$
     };
+    // empty action through to trigger any initial states.
+    return store;
 };
 
 export default createStore;
