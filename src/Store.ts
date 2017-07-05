@@ -9,7 +9,7 @@ export type Store<State, Action> = {
     /** dispatch actions into the store */
     dispatch$: Subject<Action>;
     /** observable of actions after flows applied */
-    flow$: Observable<Action>
+    action$: Observable<Action>
     /** observable of state after flows and soaks applied */
     state$: Observable<State>;
 };
@@ -31,17 +31,17 @@ export const createStore = <State, Action>(
     // insert
     const subject$ = new Subject<Action>();
     // flow
-    const flow$ = (flow ? flow(subject$) : flowThrough(subject$)).share();
+    const action$ = (flow ? flow(subject$) : flowThrough(subject$)).share();
     // soak
     const fullSoak = soak && completeSoak(soak);
-    const scan$ = fullSoak ? flow$.scan<Action, State>(fullSoak, initialState) : Observable.empty();
+    const scan$ = fullSoak ? action$.scan<Action, State>(fullSoak, initialState) : Observable.empty();
     // state
     const initialState$ = initialState ? Observable.of(initialState) : Observable.empty();
     const state$ = Observable.concat(initialState$, scan$).share();
 
     const store = {
         dispatch$: subject$,
-        flow$: flow$,
+        action$: action$,
         state$: state$
     };
     // empty action through to trigger any initial states.
