@@ -24,16 +24,16 @@ export type Store<State, Action> = {
  * @param initialState  the initial state prior to any applied soaks.
  */
 export const createStore = <State, Action>(
-    flow: Flow<Action> = flowThrough,
-    soak: Soak<State, Action>,
+    flow?: Flow<Action>,
+    soak?: Soak<State, Action>,
     initialState?: State
 ): Store<State, Action> => {
     // insert
     const subject$ = new Subject<Action>();
     // flow
-    const flow$ = flow(subject$).share();
+    const flow$ = (flow ? flow(subject$) : flowThrough(subject$)).share();
     // soak
-    const fullSoak = completeSoak(soak);
+    const fullSoak = soak ? completeSoak(soak) : (s :State, a: Action) => s;
     const scan$ = flow$.scan<Action, State>(fullSoak, initialState);
     // state
     const state$ = (initialState
