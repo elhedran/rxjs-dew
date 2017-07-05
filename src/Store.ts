@@ -1,4 +1,4 @@
-import { Flow } from './Flow';
+import { Flow, flowThrough } from './Flow';
 import { Soak, completeSoak } from './Soak';
 import { Observable, Subject } from 'rxjs';
 
@@ -24,7 +24,7 @@ export type Store<State, Action> = {
  * @param initialState  the initial state prior to any applied soaks.
  */
 export const createStore = <State, Action>(
-    flow: Flow<Action>,
+    flow: Flow<Action> = flowThrough,
     soak: Soak<State, Action>,
     initialState?: State
 ): Store<State, Action> => {
