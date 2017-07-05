@@ -21,7 +21,9 @@ with some additional goals.
 
 ### Action & State
 
-Neither `Action` nor `State` are an explicit type in Dew. They only exist as a way of keeping type consistency between Dew functions and classes.  Ideally both should be plain old data.
+Neither `Action` nor `State` are an explicit type in Dew. They only exist as a
+way of keeping type consistency between Dew functions and classes.  Ideally
+both should be plain old data.
 
 ### Flow
 
@@ -74,12 +76,34 @@ the state a soak should returned `undefined`.
 ### Store
 
 ```typescript
-export type Store<State, Action> = {
+export declare type Store<State, Action> = {
     dispatch$: Subject<Action>;
+    action$: Observable<Action>;
     state$: Observable<State>;
 };
 ```
 
-The store is quite simply a `Flow` of `Actions` that are subscribed to a scan of `Soaks` on the the `State`. The result is a `dispatch$` property that can be used to add actions into the flow and a `state$` observer that can be subscribed to react to
-state changes. As such there is no middleware it is simply a type
-definition with no private data or functions.
+A `Store` has a `dispatch$` to insert new actions, an `action$` observable of
+the actions after the flows have been applied, and a `state$` observable of
+the state after the soaks have been applied.
+
+This can be either created manually or using the convenience function `createStore`
+
+```typescript
+export declare const createStore: <State, Action>(
+  flow?: Flow<Action> | undefined,
+  soak?: Soak<State, Action> | undefined,
+  initialState?: State | undefined) => Store<State, Action>;
+
+```
+
+Each parameter is optional.  If a `flow` is provided actions will be changed by
+the flow before being soaked into the state.  If a `soak` is provided this will
+be used to apply actions to the state otherwise the state is unchanged by actions.
+If an `initialState` is provided this will be provided both to the soak and
+as an initial change to state, otherwise state will not be changed until the
+first action is passed.
+
+Note, if no initial state is set then any subscribers will not be called until
+an action is dispatched. Likewise if no soak is set then only the initial state,
+if provided, will be called upon subscribers.
