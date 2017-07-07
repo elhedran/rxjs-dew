@@ -17,7 +17,7 @@ export type ActionCreatorMap<A> = {
  * @param fn action creator function
  * @param dispatch dispatch function
  */
-export function wrapActionCreator<T extends ActionCreator<A>, A>(fn: T, dispatch: (action: A) => void): T {
+export function bindActionCreator<T extends ActionCreator<A>, A>(fn: T, dispatch: (action: A) => void): T {
     var wrappedActionCreator = (...args: any[]) => {
         const action = fn(...args);
         dispatch(action);
@@ -32,13 +32,13 @@ export function wrapActionCreator<T extends ActionCreator<A>, A>(fn: T, dispatch
  * @param map a map of action creator functions
  * @param dispatch the function to use to dispatch the action.
  */
-export function wrapActionCreatorMap<T extends ActionCreatorMap<A>, A>(map: T, dispatch: (action: A) => void): T {
+export function bindActionCreatorMap<T extends ActionCreatorMap<A>, A>(map: T, dispatch: (action: A) => void): T {
     const keys = Object.keys(map);
     const boundActionCreators: ActionCreatorMap<A> = {};
     for (let i = 0; i < keys.length; i++) {
         const key = keys[i];
         const actionCreator = map[key];
-        boundActionCreators[key] = wrapActionCreator(actionCreator, dispatch);
+        boundActionCreators[key] = bindActionCreator(actionCreator, dispatch);
     }
     return boundActionCreators as T;
 }
