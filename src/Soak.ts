@@ -1,7 +1,7 @@
 /**
  * Applies the action to the state returning the modified part of the state, or undefined if state is unmodified.
  */
-export type Soak<State, Action> = <State, Action>(state: State, action: Action) => Pick<State, keyof State>;
+export type Soak<State, Action> = <State, Action>(state: State, action: Action) => Pick<State, keyof State> | undefined;
 
 /**
  * Applies the action to the state returning the full state if modified or the original state if unmodified.
