@@ -21,6 +21,14 @@ export const completeSoak = <State, Action>(soak: Soak<State, Action>): FullSoak
             : Object.assign({}, state, partial);
     };
 
+/**
+ * Guards a soak with a type guard so it can be used with any action type.
+ * @param soak the soak function to transform
+ * @param guard the type guard to ensure the action is suitable for the soak
+ */
+export const guardSoak = <State, Action>(soak: Soak<State, Action>, guard: (action: any) => action is Action): Soak<State, any> => 
+    (state: State, action: any) => guard(action) ? soak(state, action) : undefined;
+
 
 /**
  * Combines a set of soak functions into a single soak function. Any partial soak that returns undefined will

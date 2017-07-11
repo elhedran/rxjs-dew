@@ -10,6 +10,15 @@ import { Observable } from 'rxjs';
 export type Flow<Action> = (in$: Observable<Action>) => Observable<Action>;
 
 /**
+ * Guards a flow with a type guard so it can be used with any actin type.
+ * @param flow the flow to transform
+ * @param guard the type guard to ensure the action is suitable for the soak
+ */
+export const guardFlow = <Action>(flow: Flow<Action>, guard: (action: any) => action is Action): Flow<any> => {
+    return (in$: Observable<any>) => in$.filter(guard)
+}
+
+/**
  * Takes a set of flows and combines them into a single flow. The input stream
  * of actions is shared over the set of flows and the result merged back together
  * for the output.
