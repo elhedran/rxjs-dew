@@ -28,7 +28,7 @@ both should be plain old data.
 ### Flow
 
 ```typescript
-type Flow<Action> = <Action>(in$: Observable<Action>) => Observable<Action>;
+type Flow<Action> = (in$: Observable<Action>) => Observable<Action>;
 ```
 
 A flow transforms a stream of actions. It may delay some actions, debounce
@@ -67,7 +67,7 @@ const flow = combineFlows(debounceSave, flowThrough);
 ### Soak
 
 ```typescript
-type Soak<State, Action> = <State, Action>(state: State, action: Action) => Pick<State, keyof State>;
+type Soak<State, Action> = (state: Readonly<State>, action: Readonly<Action>) => Partial<State, keyof State> | undefined;
 ```
 
 A transforms part of a state based on an action.  If an action would no change
