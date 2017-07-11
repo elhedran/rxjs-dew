@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
  * 
  * @param in$ an Observable of actions to be transformed.
  */
-export type Flow<Action> = <Action>(in$: Observable<Action>) => Observable<Action>;
+export type Flow<Action> = (in$: Observable<Action>) => Observable<Action>;
 
 /**
  * Takes a set of flows and combines them into a single flow. The input stream
