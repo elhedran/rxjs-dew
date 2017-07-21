@@ -21,7 +21,7 @@
         "rxjs"
     ],
     "author": "elhedran@gmail.com",
-    "license": "MIT",
+    "license": "Apache-2.0",
     "bugs": {
         "url": "https://github.com/elhedran/rxjs-dew/issues"
     },
