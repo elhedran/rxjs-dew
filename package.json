@@ -1,6 +1,6 @@
 {
     "name": "rxjs-dew",
-    "version": "0.5.0",
+    "version": "0.5.1",
     "description": "A redux like library built on typescript and rxjs",
     "main": "lib/index.js",
     "typings": "lib/index",
@@ -27,10 +27,10 @@
     },
     "homepage": "https://github.com/elhedran/rxjs-dew#readme",
     "devDependencies": {
-        "tslint": "^5.4.3",
+        "tslint": "^5.5.0",
         "typescript": "2.3.4"
     },
     "dependencies": {
-        "rxjs": "^5.4.1"
+        "rxjs": "^5.4.2"
     }
 }

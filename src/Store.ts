@@ -37,7 +37,9 @@ export const createStore = <State, Action>(
     const scan$ = fullSoak ? action$.scan<Action, State>(fullSoak, initialState) : Observable.empty();
     // state
     const initialState$ = initialState ? Observable.of(initialState) : Observable.empty();
-    const state$ = Observable.concat(initialState$, scan$).share();
+    const state$ = Observable.concat(initialState$, scan$)
+        .distinctUntilChanged()
+        .share();
 
     const store = {
         dispatch$: subject$,
