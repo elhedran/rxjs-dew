@@ -44,7 +44,7 @@ export const createStore = <State, Action>(
     const store = {
         dispatch$: subject$,
         action$: action$,
-        state$: replay$.share()
+        state$: replay$
     };
     // empty action through to trigger any initial states.
     return store;
