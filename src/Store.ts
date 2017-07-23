@@ -39,7 +39,7 @@ export const createStore = <State, Action>(
     const state$ = Observable.concat(initialState$, scan$)
         .distinctUntilChanged();
     const replay$ = new ReplaySubject<State>(1);
-    state$.subscribe(replay$.next);
+    state$.subscribe(state => replay$.next(state));
 
     const store = {
         dispatch$: subject$,
