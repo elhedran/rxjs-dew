@@ -45,4 +45,4 @@ export const combineFlows = <Action>(...flows: Flow<Action>[]): Flow<Action> => 
  * 
  * @param in$ an Observable of actions to be transformed.
  */
-export const flowThrough: Flow<any> = <Action>(in$: Observable<Action>) => in$;
+export function flowThrough<Action>(in$: Observable<Action>) { return in$};

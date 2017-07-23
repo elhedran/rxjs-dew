@@ -31,11 +31,11 @@ export const createStore = <State, Action>(
     // insert
     const subject$ = new Subject<Action>();
     // flow
-    const action$ = (flow ? flow(subject$) : flowThrough(subject$)).share();
+    const action$ = (flow ? flow(subject$) : flowThrough<Action>(subject$)).share();
     // soak
-    const scan$ = soak ? action$.scan<Action, State>(soak, initialState) : Observable.empty();
+    const scan$ = soak ? action$.scan<Action, State>(soak, initialState) : Observable.empty<State>();
     // state
-    const initialState$ = initialState ? Observable.of(initialState) : Observable.empty();
+    const initialState$ = initialState ? Observable.of(initialState) : Observable.empty<State>();
     const state$ = Observable.concat(initialState$, scan$)
         .distinctUntilChanged()
         .share();
