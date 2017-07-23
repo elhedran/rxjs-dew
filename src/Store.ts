@@ -1,6 +1,6 @@
 import { Flow, flowThrough } from './Flow';
 import { Soak } from './Soak';
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, BehaviorSubject } from 'rxjs';
 
 /**
  * The dispatch and state that comprises a dw Store.
@@ -35,15 +35,17 @@ export const createStore = <State, Action>(
     // soak
     const scan$ = soak ? action$.scan<Action, State>(soak, initialState) : Observable.empty<State>();
     // state
-    const initialState$ = initialState ? Observable.of(initialState) : Observable.empty<State>();
-    const state$ = Observable.concat(initialState$, scan$)
-        .distinctUntilChanged()
-        .share();
+    const state$ = new BehaviorSubject<State | undefined>(initialState);
+    scan$.distinctUntilChanged().subscribe(state$.next);
+
+    function isState(x: State | undefined): x is State {
+        return x !== undefined;
+    }
 
     const store = {
         dispatch$: subject$,
         action$: action$,
-        state$: state$
+        state$: state$.filter(isState).share()
     };
     // empty action through to trigger any initial states.
     return store;

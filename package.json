@@ -1,6 +1,6 @@
 {
     "name": "rxjs-dew",
-    "version": "0.6.0",
+    "version": "0.6.1",
     "description": "A redux like library built on typescript and rxjs",
     "main": "lib/index.js",
     "typings": "lib/index",
