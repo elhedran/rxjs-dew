@@ -1,5 +1,5 @@
 import { Flow, flowThrough } from './Flow';
-import { Soak, completeSoak } from './Soak';
+import { Soak } from './Soak';
 import { Observable, Subject } from 'rxjs';
 
 /**
@@ -33,8 +33,7 @@ export const createStore = <State, Action>(
     // flow
     const action$ = (flow ? flow(subject$) : flowThrough(subject$)).share();
     // soak
-    const fullSoak = soak && completeSoak(soak);
-    const scan$ = fullSoak ? action$.scan<Action, State>(fullSoak, initialState) : Observable.empty();
+    const scan$ = soak ? action$.scan<Action, State>(soak, initialState) : Observable.empty();
     // state
     const initialState$ = initialState ? Observable.of(initialState) : Observable.empty();
     const state$ = Observable.concat(initialState$, scan$)

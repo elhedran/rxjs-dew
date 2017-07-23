@@ -1,24 +1,30 @@
 /**
  * Applies the action to the state returning the modified part of the state, or undefined if state is unmodified.
+ * 
+ * *Note, any undefined values will not be applied to state.  If the soak needs to set some fields to
+ * undefined use a full soak*
  */
-export type Soak<State, Action> = (state: Readonly<State>, action: Readonly<Action>) => Partial<State> | undefined;
+export type PartialSoak<State, Action> = (state: Readonly<State>, action: Readonly<Action>) => Partial<State> | undefined;
 
 /**
  * Applies the action to the state returning the full state if modified or the original state if unmodified.
  */
-export type FullSoak<State, Action> = (state: Readonly<State>, action: Readonly<Action>) => State;
+export type Soak<State, Action> = (state: Readonly<State>, action: Readonly<Action>) => State;
 
 /**
  * Convenience function to transform a partial soak function into a full soak function.
  * 
  * @param soak the soak function to transform.
  */
-export const completeSoak = <State, Action>(soak: Soak<State, Action>): FullSoak<State, Action> => 
+export const completeSoak = <State, Action>(soak: PartialSoak<State, Action>): Soak<State, Action> => 
     (state: State, action: Action) => {
         const partial = soak(state, action);
-        return (partial === undefined || partial === {})
-            ? state
-            : Object.assign({}, state, partial);
+        if (partial === undefined) {
+            return state;
+        }
+        var result = Object.assign({}, state);
+        Object.keys(partial).forEach(k => result[k] = partial[k] === undefined ? result[k] : partial[k])
+        return result;
     };
 
 /**
@@ -27,7 +33,7 @@ export const completeSoak = <State, Action>(soak: Soak<State, Action>): FullSoak
  * @param guard the type guard to ensure the action is suitable for the soak
  */
 export const guardSoak = <State, Action>(soak: Soak<State, Action>, guard: (action: any) => action is Action): Soak<State, any> => 
-    (state: State, action: any) => guard(action) ? soak(state, action) : undefined;
+    (state: State, action: any) => guard(action) ? soak(state, action) : state;
 
 
 /**
@@ -38,9 +44,11 @@ export const guardSoak = <State, Action>(soak: Soak<State, Action>, guard: (acti
  */
 export const combineSoaks = <State, Action>(...soaks: (Soak<State, Action>)[]): Soak<State, Action> => 
     (state: State, action: Action) => {
-        const partials = soaks
-            .map(fn => fn(state, action))
-            .filter(partial => partial !== undefined && partial !== {});
-        if (partials.length === 0) return undefined;
-        return Object.assign({}, ...partials);
+        var next = state;
+        soaks.forEach(soak => {
+            var change = soak(next, action);
+            if (change !== undefined)
+                next = change;
+        })
+        return next;
     };
