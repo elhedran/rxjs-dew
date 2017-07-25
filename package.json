@@ -1,36 +1,40 @@
 {
-    "name": "rxjs-dew",
-    "version": "0.6.3",
-    "description": "A redux like library built on typescript and rxjs",
-    "main": "lib/index.js",
-    "typings": "lib/index",
-    "readme": "README.md",
-    "files": [
-        "/lib"
-    ],
-    "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1",
-        "build": "tsc"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/elhedran/rxjs-dew.git"
-    },
-    "keywords": [
-        "typescript",
-        "rxjs"
-    ],
-    "author": "elhedran@gmail.com",
-    "license": "Apache-2.0",
-    "bugs": {
-        "url": "https://github.com/elhedran/rxjs-dew/issues"
-    },
-    "homepage": "https://github.com/elhedran/rxjs-dew#readme",
-    "devDependencies": {
-        "tslint": "^5.5.0",
-        "typescript": "2.3.4"
-    },
-    "dependencies": {
-        "rxjs": "^5.4.2"
-    }
+  "name": "rxjs-dew",
+  "version": "0.6.3",
+  "description": "A redux like library built on typescript and rxjs",
+  "main": "lib/index.js",
+  "typings": "lib/index",
+  "readme": "README.md",
+  "files": [
+    "/lib"
+  ],
+  "scripts": {
+    "pretest": "npm run build",
+    "test": "jasmine",
+    "build": "tsc",
+    "watch": "tsc -w"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/elhedran/rxjs-dew.git"
+  },
+  "keywords": [
+    "typescript",
+    "rxjs"
+  ],
+  "author": "elhedran@gmail.com",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/elhedran/rxjs-dew/issues"
+  },
+  "homepage": "https://github.com/elhedran/rxjs-dew#readme",
+  "devDependencies": {
+    "@types/jasmine": "^2.5.53",
+    "jasmine": "^2.6.0",
+    "tslint": "^5.5.0",
+    "typescript": "2.3.4"
+  },
+  "dependencies": {
+    "rxjs": "^5.4.2"
+  }
 }
