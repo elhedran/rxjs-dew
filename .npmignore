@@ -1,0 +1,4 @@
+.npmignore
+spec
+*[Ss]pec.js.map
+*[Ss]pec.d.ts
