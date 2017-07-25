@@ -1,4 +1,4 @@
 .npmignore
-spec
+*[SS]pec.js
 *[Ss]pec.js.map
 *[Ss]pec.d.ts
