@@ -22,8 +22,19 @@ export const completeSoak = <State, Action>(soak: PartialSoak<State, Action>): S
         if (partial === undefined) {
             return state;
         }
-        var result = Object.assign({}, state);
-        Object.keys(partial).forEach(k => result[k] = partial[k] === undefined ? result[k] : partial[k])
+        
+        var result:any = {};
+        for (let k in state) {
+            if (state.hasOwnProperty(k)) {
+                result[k] = state[k];
+            }
+        }
+        for (let k in partial) {
+            if (partial.hasOwnProperty(k) && partial[k] !== undefined) {
+                result[k] = partial[k];
+            }
+
+        }
         return result;
     };
 

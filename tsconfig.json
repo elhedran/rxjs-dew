@@ -1,9 +1,10 @@
 {
     "compilerOptions": {
-        "outDir": "lib",
+        "outDir": "js/dist",
         "declaration": true,
         "module": "commonjs",
-        "lib": ["es6", "dom"],
+        "lib": ["es5", "es2015.iterable", "es2015.collection", "es2015.promise", "dom"],
+        "target": "es5",
         "sourceMap": true,
         "allowJs": false,
         "rootDir": "src",
@@ -15,9 +16,8 @@
         "suppressImplicitAnyIndexErrors": true,
         "noUnusedLocals": true
     },
-    "exclude": [
-        "node_modules",
-        "lib"
+    "files": [
+        "src/index.ts"
     ],
     "types": [
         "typePatches"
