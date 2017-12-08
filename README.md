@@ -76,7 +76,7 @@ the state a soak should returned `undefined`.
 ### Store
 
 ```typescript
-export declare type Store<State, Action> = {
+declare type Store<State, Action> = {
     dispatch$: Subject<Action>;
     action$: Observable<Action>;
     state$: Observable<State>;
@@ -90,7 +90,7 @@ the state after the soaks have been applied.
 This can be either created manually or using the convenience function `createStore`
 
 ```typescript
-export declare const createStore: <State, Action>(
+declare const createStore: <State, Action>(
   flow?: Flow<Action> | undefined,
   soak?: Soak<State, Action> | undefined,
   initialState?: State | undefined) => Store<State, Action>;
@@ -107,3 +107,44 @@ first action is passed.
 Note, if no initial state is set then any subscribers will not be called until
 an action is dispatched. Likewise if no soak is set then only the initial state,
 if provided, will be called upon subscribers.
+
+### Utilities
+
+#### bindActionCreator
+
+Allows binding a function that creates an action to a function that dispatches that
+action, returning a function that both creates and dispatches the action.
+
+```typescript
+function bindActionCreator<T extends ActionCreator<A>, A>(fn: T, dispatch: (action: A) => void): T;
+```
+
+#### bindActionCreatorMap
+
+Allows binding a map of functions that create actions to a function that dispatches
+an an action of the same type, returning a map of functions that both create and
+dispatch the action.
+
+```typescript
+type ActionCreatorMap<A> = {
+    [key: string]: ActionCreator<A>;
+};
+
+function bindActionCreatorMap<T extends ActionCreatorMap<A>, A>(map: T, dispatch: (action: A) => void): T;
+```
+
+#### creatService
+
+As a convienience ther is also the `createService` function which binds an action
+creator map directly to a store.  The object returned is a copy of the store with
+refrences to its `dispatch$`, `action$` and `$state` members, but with additional
+bound functions based on action creators that will push the respective actions
+onto the store's `dispatch$`. This service can then be used reducing the need for
+users of the store to bind actions themeselves.
+
+```typescript
+export function createService<T extends ActionCreatorMap<A>, A, S>(
+    map: T,
+    store: Store<S, A>
+): Store<S, A> & T;
+```
