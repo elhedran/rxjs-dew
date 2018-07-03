@@ -1,5 +1,5 @@
-import { Observable } from 'rxjs';
-
+import { Observable, merge } from 'rxjs';
+import { filter, share } from 'rxjs/operators';
 /**
  * A Flow describes how a stream of program actions is transformed over time.
  * This allows for actions to trigger other actions, be debounced, or passed
@@ -15,7 +15,7 @@ export type Flow<Action> = (in$: Observable<Action>) => Observable<Action>;
  * @param guard the type guard to ensure the action is suitable for the soak
  */
 export const guardFlow = <Action>(flow: Flow<Action>, guard: (action: any) => action is Action): Flow<any> => {
-    return (in$: Observable<any>) => in$.filter(guard)
+    return (in$: Observable<any>) => in$.pipe(filter(guard))
 }
 
 /**
@@ -30,8 +30,8 @@ export const guardFlow = <Action>(flow: Flow<Action>, guard: (action: any) => ac
  */
 export const combineFlows = <Action>(...flows: Flow<Action>[]): Flow<Action> => {
     var result = (next: Observable<Action>) => {
-        const share$ = next.share();
-        return Observable.merge(
+        const share$ = next.pipe(share());
+        return merge(
             ...flows.map(fn => fn(share$))
         );
     };

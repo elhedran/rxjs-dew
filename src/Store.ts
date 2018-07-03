@@ -1,6 +1,12 @@
 import { Flow, flowThrough } from './Flow';
 import { Soak } from './Soak';
-import { Observable, Subject, ReplaySubject } from 'rxjs';
+import {
+    Observable, Subject, ReplaySubject,
+    concat, of, empty
+} from 'rxjs';
+import {
+    share, scan, distinctUntilChanged
+} from 'rxjs/operators'
 
 /**
  * The dispatch and state that comprises a dw Store.
@@ -31,13 +37,13 @@ export const createStore = <State, Action>(
     // insert
     const subject$ = new Subject<Action>();
     // flow
-    const action$ = (flow ? flow(subject$) : flowThrough<Action>(subject$)).share();
+    const action$ = (flow ? flow(subject$) : flowThrough<Action>(subject$)).pipe(share());
     // soak
-    const scan$ = soak ? action$.scan<Action, State>(soak, initialState) : Observable.empty<State>();
+    const scan$ = soak ? action$.pipe(scan<Action, State>(soak, initialState)) : empty();
     // state
-    const initialState$ = initialState ? Observable.of(initialState) : Observable.empty<State>();
-    const state$ = Observable.concat(initialState$, scan$)
-        .distinctUntilChanged();
+    const initialState$ = initialState ? of(initialState) : empty();
+    const state$ = concat(initialState$, scan$)
+        .pipe(distinctUntilChanged());
     const replay$ = new ReplaySubject<State>(1);
     state$.subscribe(state => replay$.next(state));
 
