@@ -1,5 +1,5 @@
-import { createAction, isAction, ActionCreatorMapUnion } from './Action';
-
+import { createAction, isAction, ActionCreatorMapUnion, bindActionCreator, bindActionCreatorMap } from './Action';
+import { Subject } from 'rxjs';
 export enum ActionType {
     SignIn = 'SignIn',
     SignOut = 'SignOut',
@@ -39,4 +39,15 @@ describe('isAction', () => {
         expect(isB(a())).toBe(false);
         expect(isB(b())).toBe(true);
     })
-})
+});
+
+describe('dynamic creator map', () => {
+    it('can be bound', () => {
+        let count = 0;
+        let bound = bindActionCreatorMap(
+            Action.creators, (a: Action) => { count++; }
+        );
+        bound.signIn();
+        expect(count).toBe(1);
+    });
+});

@@ -10,7 +10,7 @@ import { filter, share } from 'rxjs/operators';
 export type Flow<Action> = (in$: Observable<Action>) => Observable<Action>;
 
 /**
- * Guards a flow with a type guard so it can be used with any actin type.
+ * Guards a flow with a type guard so it can be used with any action type.
  * @param flow the flow to transform
  * @param guard the type guard to ensure the action is suitable for the soak
  */
@@ -45,4 +45,4 @@ export const combineFlows = <Action>(...flows: Flow<Action>[]): Flow<Action> => 
  * 
  * @param in$ an Observable of actions to be transformed.
  */
-export function flowThrough<Action>(in$: Observable<Action>) { return in$};
+export function flowThrough<Action>(in$: Observable<Action>) { return in$ };
