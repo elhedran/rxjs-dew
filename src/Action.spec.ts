@@ -1,5 +1,5 @@
 import { createAction, isAction, ActionCreatorMapUnion, bindActionCreator, bindActionCreatorMap } from './Action';
-import { Subject } from 'rxjs';
+
 export enum ActionType {
     SignIn = 'SignIn',
     SignOut = 'SignOut',

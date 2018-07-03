@@ -25,6 +25,14 @@ Neither `Action` nor `State` are an explicit type in Dew. They only exist as a
 way of keeping type consistency between Dew functions and classes.  Ideally
 both should be plain old data.
 
+Additionally while it is recommended that actions have a `type` field and that this
+type field derives from string, this is not required. The only functions that place
+a requirement on type are:
+
+* `createAction`: `type` passed must extend string
+* `isAction`: created functions `action` must have a `type` property of the same type
+  as the `type` parameter used to create the function.
+
 ### Flow
 
 ```typescript
@@ -44,9 +52,11 @@ and then map them to a save action.
 
 ```typescript
 const debounceSave = (in$: Observable<MyActions>) =>
-    in$.filter(action => action.type == 'change')
-        .debounce(500 /*ms*/)
-        .map(action => { type: 'save', payload: action.payload });
+    in$.pipe(
+      filter(action => action.type == 'change'),
+      debounce(500 /*ms*/),
+      map(action => { type: 'save', payload: action.payload })
+    );
 ```
 
 Flows can also be combined.
@@ -110,6 +120,43 @@ if provided, will be called upon subscribers.
 
 ### Utilities
 
+#### createAction, isAction, and ActionCreatorMapUnion
+
+With typescript 2.8 and `ReturnType<F>` it is now easier to define actions base of the
+creator map.  This pattern can be used as;
+
+```typescript
+
+export enum ActionType {
+    SignIn = 'SignIn',
+    SignOut = 'SignOut',
+}
+
+export const creators = {
+    signIn: () => createAction(ActionType.SignIn),
+    signOut: (next: number) => ({ ...createAction(ActionType.SignOut), next })
+};
+
+export type Action = ActionCreatorMapUnion<typeof creators>;
+```
+
+Additionally this pattern can also be used in defining action filters which will perform
+type narrowing suitable for using with `rxjs` filter.
+
+```typescript
+export const filters = {
+    isSignIn: isAction(ActionType.SignIn, creators.signIn),
+    isSignOut: isAction(ActionType.SignOut, creators.signOut)
+};
+
+function doAction(a: Action) {
+  return a.next; // compile error, a may not have a next;
+  if (filters.isSignOut(a)) {
+    return a.next; // compiles, isSignOut narrowed type.
+  }
+}
+```
+
 #### bindActionCreator
 
 Allows binding a function that creates an action to a function that dispatches that
@@ -135,7 +182,7 @@ function bindActionCreatorMap<T extends ActionCreatorMap<A>, A>(map: T, dispatch
 
 #### creatService
 
-As a convienience ther is also the `createService` function which binds an action
+As a convienience there is also the `createService` function which binds an action
 creator map directly to a store.  The object returned is a copy of the store with
 refrences to its `dispatch$`, `action$` and `$state` members, but with additional
 bound functions based on action creators that will push the respective actions
