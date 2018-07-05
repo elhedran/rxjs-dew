@@ -2,6 +2,9 @@
 
 # RxJs Dew
 
+**NOTE version `1.x` has been updated to work against rxjs 6. If you require
+support for rxjs 5 please use version `0.x`**
+
 This project is born out of an appreciation of redux, but a love of RxJS and
 TypeScript. It isn't a port or wrapping of redux with RxJS, its a fresh start
 with some additional goals.
